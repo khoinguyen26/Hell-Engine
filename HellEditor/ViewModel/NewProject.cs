@@ -121,8 +121,12 @@ namespace HellEditor.ViewModel
                 dirInfo.Attributes |= FileAttributes.Hidden;
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
 
-                var project = new Project(ProjectName, path);
-                Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
+                var projectXml = File.ReadAllText(template.ProjectFilePath);
+                projectXml = string.Format(projectXml, ProjectName, ProjectPath);
+
+                var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
+                File.WriteAllText(projectPath, projectXml);
+
 
                 return path;
             }
