@@ -18,7 +18,19 @@ namespace HellEditor.ViewModel
 
         private static void ReadProjectData()
         {
-            throw new NotImplementedException();
+            if (File.Exists(_projectDataPath))
+            {
+                var projects = Serializer.FromFile<ProjectDataList>(_projectDataPath).Projects.OrderByDescending(x => x.Date);
+                _projects.Clear();
+                foreach (var project in projects)
+                {
+                    if (File.Exists(project.FullPath))
+                    {
+                        project.Icon = File.ReadAllBytes($@"{project.ProjectPath}\.Hell\Icon.png");
+                        _projects.Add(project);
+                    }
+                }
+            }
         }
         private static void WriteProjectData()
         {
