@@ -95,7 +95,11 @@ namespace HellEditor.ViewModel
         }
 
 
-        // handle create new project
+        /// <summary>
+        /// Create a new project
+        /// </summary>
+        /// <param name="template">take selected template from new project view</param>
+        /// <returns>path of the project</returns>
         public string CreateProject(ProjectTemplate template)
         {
             ValidateProjectPath();
