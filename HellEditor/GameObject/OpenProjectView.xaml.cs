@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HellEditor.Models;
+using HellEditor.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace HellEditor.GameObject
 {
@@ -24,5 +14,34 @@ namespace HellEditor.GameObject
         {
             InitializeComponent();
         }
+
+        private void Open_Button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenSelectedProject();
+        }
+
+        private void ListBoxItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            OpenSelectedProject();
+        }
+
+        private void OpenSelectedProject()
+        {
+            var project = OpenProject.Open(projectListBox.SelectedItem as ProjectData);
+
+            bool dialogResult = false;
+
+            var window = Window.GetWindow(this);
+
+            if (project != null)
+            {
+                dialogResult = true;
+                window.DataContext = project;
+            }
+
+            window.DialogResult = dialogResult;
+            window.Close();
+        }
+
     }
 }
