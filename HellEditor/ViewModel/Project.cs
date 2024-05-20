@@ -35,6 +35,27 @@ namespace HellEditor.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// add a scene
+        /// </summary>
+        /// <param name="sceneName">name of the scene</param>
+        public void AddScene(string sceneName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
+            _scenes.Add(new Scene(this, sceneName));
+        }
+
+        /// <summary>
+        /// Remove a scene
+        /// </summary>
+        /// <param name="scene"></param>
+        public void RemoveScene(Scene scene)
+        {
+            Debug.Assert(_scenes.Contains(scene));
+            _scenes.Remove(scene);
+        }
+
         public static Project Current => Application.Current.MainWindow.DataContext as Project;
 
         public static Project Load(string file)
