@@ -1,5 +1,4 @@
-﻿using HellEditor.ViewModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace HellEditor.Editors
 {
@@ -11,12 +10,6 @@ namespace HellEditor.Editors
         public ProjectLayoutView()
         {
             InitializeComponent();
-        }
-
-        private void OnAddScene_Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            var vm = DataContext as Project;
-            vm.AddScene("New Scene" + vm.Scenes.Count);
         }
     }
 }

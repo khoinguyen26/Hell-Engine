@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 
-namespace HellEditor.Utils
+namespace HellEditor.Utilities
 {
     public static class Serializer
     {

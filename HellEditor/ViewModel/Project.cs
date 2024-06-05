@@ -1,9 +1,10 @@
-﻿using HellEditor.Utils;
+﻿using HellEditor.Utilities;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Input;
 
 namespace HellEditor.ViewModel
 {
@@ -35,12 +36,19 @@ namespace HellEditor.ViewModel
             }
         }
 
+        public static UndoRedo UndoRedo { get; } = new UndoRedo();
+
+        public ICommand Undo { get; set; }
+        public ICommand Redo { get; set; }
+        public ICommand AddScene { get; set; }
+        public ICommand RemoveScene { get; set; }
+
 
         /// <summary>
         /// add a scene
         /// </summary>
         /// <param name="sceneName">name of the scene</param>
-        public void AddScene(string sceneName)
+        private void AddSceneInternal(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
             _scenes.Add(new Scene(this, sceneName));
@@ -50,7 +58,7 @@ namespace HellEditor.ViewModel
         /// Remove a scene
         /// </summary>
         /// <param name="scene"></param>
-        public void RemoveScene(Scene scene)
+        private void RemoveSceneInternal(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);
@@ -83,6 +91,32 @@ namespace HellEditor.ViewModel
                 OnPropertyChanged(nameof(Scenes));
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
+
+            AddScene = new RelayCommand<object>(x =>
+            {
+                AddSceneInternal($"New scene {_scenes.Count}");
+                var newScene = _scenes.Last();
+                var sceneIndex = _scenes.Count - 1;
+                UndoRedo.Add(new UndoRedoAction(
+                    () => RemoveSceneInternal(newScene),
+                    () => _scenes.Insert(sceneIndex, newScene),
+                    $"Add {newScene.Name}"
+                    ));
+            });
+
+            RemoveScene = new RelayCommand<Scene>(x =>
+            {
+                var sceneIndex = _scenes.IndexOf(x);
+                RemoveSceneInternal(x);
+
+                UndoRedo.Add(new UndoRedoAction(
+                    () => _scenes.Insert(sceneIndex, x),
+                    () => RemoveSceneInternal(x),
+                    $"Remove {x.Name}"));
+            }, x => !x.IsActive);
+
+            Undo = new RelayCommand<object>(x => UndoRedo.Undo());
+            Redo = new RelayCommand<object>(x => UndoRedo.Redo());
         }
 
         public Project(string name, string path)

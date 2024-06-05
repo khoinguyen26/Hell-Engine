@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace HellEditor.Utils
+namespace HellEditor.Utilities
 {
-    interface IUndoRedo
+    public interface IUndoRedo
     {
         string Name { get; }
         void Undo();
@@ -34,7 +34,7 @@ namespace HellEditor.Utils
         }
     }
 
-    class UndoRedo
+    public class UndoRedo
     {
         // use ObservableCollection for undo redo history in the fure
         private readonly ObservableCollection<IUndoRedo> _redoList = [];
